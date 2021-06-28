@@ -3,7 +3,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const { DefinePlugin } = require("webpack")
 const { CopyWebpackPlugin } = require("copy-webpack-plugin")
-
+const { VueLoaderPlugin } = require('vue-loader/dist/index')
 
 //webpack是在node里运行,所以用commonjs方式
 module.exports = {
@@ -17,6 +17,10 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "./dist"),  //要求绝对路径
     filename: "js/bundle.js" //默认main.js 改为bundle.js
+  },
+  devServer: {
+    contentBase: "./public",
+    hot: true
   },
   module: {
     rules: [
@@ -89,6 +93,24 @@ module.exports = {
           filename: "font/[name]_[hash:6][ext]"
         },
       },
+      //webpack babel-loader
+      {
+        test: /\.js$/,
+        use: {
+          loader: "babel-loader",
+          // plugins: [
+          //   "@babel/plugin-transform-arrow-functions", //箭头函数
+          //   "@babel/plugin-transform-block-scoping"    //块级作用域 const let
+          // ]
+          presets: [
+            "@babel/preset-env" //es6
+          ]
+        }
+      },
+      {
+        test: /\.vue$/,
+        loader: "vue-loader"
+      }
     ]
   },
   plugins: [
@@ -98,7 +120,9 @@ module.exports = {
       title: "test网页标题"
     }),  //生成dist里面的html
     new DefinePlugin({
-      BASE_URL: "'./'"
+      BASE_URL: "'./'",
+      __VUE_OPTIONS_API__: true,
+      __VUE_PROD_DEVTOOLS: false
     }),
     new CopyWebpackPlugin({
       patterns: [
@@ -112,6 +136,7 @@ module.exports = {
           }
         }
       ]
-    })
+    }),
+    new VueLoaderPlugin()
   ]
 }
