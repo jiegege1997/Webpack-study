@@ -11,6 +11,7 @@ module.exports = {
   // development  || production
   mode: "development", //代码不压缩
   // devtool: "eval", //默认值
+  target: "web",
   //设置source-map 建立js映射文件 方便调试代码错误
   devtool: "source-map",
   entry: "./src/main.js",
@@ -20,7 +21,15 @@ module.exports = {
   },
   devServer: {
     contentBase: "./public",
-    hot: true
+    hot: trues
+  },
+  //
+  resolve: {
+    extensions: [".js", ".json", ".vue", ".ts"],
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+      "js": path.resolve(__dirname, "./src/js")
+    }
   },
   module: {
     rules: [
